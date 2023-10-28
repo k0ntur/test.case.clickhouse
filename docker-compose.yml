@@ -1,0 +1,77 @@
+version: '3'
+services:
+  callmedia-app:
+    container_name: callmedia-app
+    build:
+      context: .
+      dockerfile: PHP.Dockerfile
+    expose:
+      - 9000
+    restart: unless-stopped
+    volumes:
+      - ./app/:/var/www/app:rw
+      - ./cfg/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    working_dir: /var/www/app
+    networks:
+      - callmedia
+
+  callmedia-nginx:
+    container_name: callmedia-nginx
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - 80:80
+    volumes:
+      - ./cfg/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./app/:/var/www/app:rw
+    networks:
+      - callmedia
+
+  callmedia-mysql:
+    image: mariadb:latest
+    container_name: callmedia-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 'secret'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'pass'
+      MYSQL_DATABASE: 'callmedia'
+    volumes:
+      - ./initdb/maria_db.sql:/docker-entrypoint-initdb.d/init.sql
+    expose:
+      - 3306
+    networks:
+      - callmedia
+
+  callmedia-rmq:
+    image: rabbitmq:3.10.5-management
+    container_name: callmedia-rmq
+    environment:
+      RABBITMQ_DEFAULT_USER: myuser
+      RABBITMQ_DEFAULT_PASS: mypassword
+    expose:
+      - 5672
+    ports:
+      # HTTP management UI
+      - '15672:15672'
+    networks:
+      - callmedia
+
+  callmedia-clickhouse:
+    image: clickhouse/clickhouse-server
+    container_name: callmedia-clickhouse
+    expose:
+      - 9004
+    volumes:
+      - ./initdb/clickhouse_db.sql:/docker-entrypoint-initdb.d/init.sql
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 262144
+        hard: 262144
+    networks:
+      - callmedia
+
+networks:
+  callmedia:
+    driver: bridge
