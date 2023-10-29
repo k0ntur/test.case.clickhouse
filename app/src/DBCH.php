@@ -6,7 +6,7 @@ namespace App;
 
 use PDO;
 
-class DB
+class DBCH
 {
     private PDO $pdo;
 

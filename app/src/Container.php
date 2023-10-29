@@ -30,7 +30,7 @@ class Container implements ContainerInterface
         return isset($this->factories[$id]);
     }
 
-    public function set(string $id, callable $factory, $singleton = true)
+    public function set(string $id, callable $factory, $singleton = false)
     {
         if (!$singleton) {
             $this->factories[$id] = $factory;
@@ -86,11 +86,11 @@ class Container implements ContainerInterface
 
             if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()){
                 $idDependencies[] = $this->get($type->getName());
+            } else {
+                throw new ContainerException(
+                    'Cant resolve class "' . $id . '" since its param "' . $name . '" has a scalar type'
+                );
             }
-
-            throw new ContainerException(
-                'Cant resolve class "'.$id.'" since its param "'.$name.'" has a scalar type'
-            );
         }
 
         return $refClass->newInstanceArgs($idDependencies);
