@@ -26,6 +26,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 #очищаем кеш apt
 RUN apt-get clean all
 RUN rm -rf /var/lib/apt/lists/*
+COPY healthcheck.sh /usr/local/bin/healthcheck
+RUN chmod +x /usr/local/bin/healthcheck
+HEALTHCHECK --interval=10s --timeout=3s --retries=3 CMD ["healthcheck"]
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 EXPOSE 9000
