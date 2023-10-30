@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App;
 
 use App\Exceptions\ContainerException;
-use App\Exceptions\NotFoundException;
 use Psr\Container\ContainerInterface;
 
 class Container implements ContainerInterface
@@ -16,9 +15,13 @@ class Container implements ContainerInterface
     public function get(string $id)
     {
         if ($this->has($id)){
-            $factory = $this->factories[$id];
+            if (is_callable($this->factories[$id])) {
+                $factory = $this->factories[$id];
 
-            return $factory($this);
+                return $factory($this);
+            }
+
+            $id = $this->factories[$id];
         }
 
         return $this->resolve($id);
@@ -30,7 +33,7 @@ class Container implements ContainerInterface
         return isset($this->factories[$id]);
     }
 
-    public function set(string $id, callable $factory, $singleton = false)
+    public function set(string $id, callable|string $factory, $singleton = false)
     {
         if (!$singleton) {
             $this->factories[$id] = $factory;

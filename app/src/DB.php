@@ -6,6 +6,7 @@ namespace App;
 
 use PDO;
 
+/** @mixin PDO */
 class DB
 {
     private PDO $pdo;
@@ -16,5 +17,10 @@ class DB
         $user = $config->db['user'];
         $password = $config->db['password'];
         $this->pdo = new PDO($dsn, $user, $password);
+    }
+
+    public function __call(string $method, array $arguments = [])
+    {
+        return call_user_func_array([$this->pdo, $method], $arguments);
     }
 }

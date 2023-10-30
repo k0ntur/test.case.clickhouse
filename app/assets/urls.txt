@@ -8,5 +8,3 @@ rambler.ru
 auto.ru
 drom.ru
 youtube.com
-dzen.ru
-price.ru

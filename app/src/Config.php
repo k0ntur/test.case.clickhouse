@@ -6,6 +6,7 @@ namespace App;
 /**
  * @property array $db
  * @property array $dbCH
+ * @property array $amqp
  */
 class Config
 {
@@ -29,6 +30,11 @@ class Config
         $this->config['dbCH']['user'] = $_ENV['DB_CH_USER'];
         $this->config['dbCH']['password'] = $_ENV['DB_CH_PASSWORD'];
         $this->config['dbCH']['driver'] = $_ENV['DB_CH_DRIVER']??'mysql';
+
+        $this->config['amqp']['host'] = $_ENV['AMQP_HOST'];
+        $this->config['amqp']['port'] = $_ENV['AMQP_PORT'];
+        $this->config['amqp']['user'] = $_ENV['AMQP_USER'];
+        $this->config['amqp']['password'] = $_ENV['AMQP_PASSWORD'];
     }
 
     public function __get(string $name)
