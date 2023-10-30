@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS`callmedia`;
+CREATE DATABASE IF NOT EXISTS `callmedia`;
 
 USE `callmedia`;
 
@@ -9,3 +9,6 @@ CREATE TABLE IF NOT EXISTS `urls_stat`(
     `length` int(11) UNSIGNED NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 )ENGINE=InnoDB CHARSET=utf8;
+
+CREATE USER 'user'@'%' IDENTIFIED BY 'pass';
+GRANT ALL PRIVILEGES ON callmedia.* TO 'user'@'%';

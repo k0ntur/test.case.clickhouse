@@ -28,7 +28,5 @@ RUN apt-get clean all
 RUN rm -rf /var/lib/apt/lists/*
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
 EXPOSE 9000
-
-CMD ["/usr/bin/supervisord","-c","/etc/supervisor/supervisord.conf"]
+CMD composer install; /usr/bin/supervisord -c /etc/supervisor/supervisord.conf

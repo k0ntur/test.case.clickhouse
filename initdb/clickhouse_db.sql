@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS`callmedia`;
+CREATE DATABASE IF NOT EXISTS `callmedia`;
 
 USE `callmedia`;
 
