@@ -31,7 +31,7 @@ while (!feof($file)){
     $url = fgets($file);
     echo $url, ' - published',  PHP_EOL;
     $producer->publish($url, $exchange, $queue, $routingKey);
-    sleep(random_int(3, 10));
+    sleep(random_int(10, 100));
 }
 
 
